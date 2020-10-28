@@ -1,28 +1,22 @@
 package com.company;
 
-import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutionException;
 
 public class Main {
 
-    public static void main(String[] args) throws InterruptedException {
-        System.out.println("Main thread started!");
-        var monteCarlo = new ParallelMonteCarloPi(10, 10000000);
-        var result = monteCarlo.estimatePi();
-        System.out.println(result.toString());
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
+        var nThreads = 1000;
+        var nIterations = 100000000;
 
-        System.out.println("Main thread finished!");
-//    	var thread =  new PointsCounterThread(10000);
-//    	thread.setName("Thread 1");
-//    	thread.start();
-//		try {
-//			thread.join();
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-//		System.out.println(thread.getNumberPointsCircle());
-//		System.out.println(thread.getNumberPointsSquare());
-//		System.out.println("Main thread finished");
+        var monteCarlo = new ParallelMonteCarloPi(nThreads, nIterations);
+
+        var startTime = System.currentTimeMillis();
+        var result = monteCarlo.estimatePi();
+        var endTime = System.currentTimeMillis();
+
+        System.out.println("PI is " + result);
+        System.out.println("THREADS " + nThreads);
+        System.out.println("ITERATIONS " + nIterations);
+        System.out.println("Time " + (endTime - startTime) + " ms");
     }
 }

@@ -1,30 +1,26 @@
 package com.company;
 
-import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class ParallelMonteCarloPi {
-    private final PointsCounterThread[] threads;
-    private final int numberPointsSquare;
+    private final PointsCounterThread pointsCounter;
+    private final ExecutorService executor;
 
-    public ParallelMonteCarloPi(int nThreads, int nPoints) {
-        this.threads = new PointsCounterThread[nThreads];
-        this.numberPointsSquare = nPoints * nThreads;
-        for (int i = 0; i < nThreads; ++i)
-            this.threads[i] = new PointsCounterThread(nPoints);
+    public ParallelMonteCarloPi(int nThreads, int nIterations) {
+        this.pointsCounter = new PointsCounterThread(nIterations / nThreads);
+        this.executor = Executors.newFixedThreadPool(nThreads);
     }
 
-    public Double estimatePi() {
-        Arrays.stream(threads).forEach(Thread::start);
-        for (var thread : threads) {
-            try {
-                thread.join();
-            } catch (InterruptedException exception) {
-                exception.printStackTrace();
-            }
-        }
-        var totalNumberPointsCircle = Arrays.stream(threads).mapToInt(PointsCounterThread::getNumberPointsCircle).sum();
-        System.out.println("total number = " + totalNumberPointsCircle);
+    public Double estimatePi() throws InterruptedException {
+        executor.execute(pointsCounter);
+        executor.shutdown();
+        executor.awaitTermination(24L, TimeUnit.HOURS);
 
-        return 4 * Double.valueOf(totalNumberPointsCircle) / numberPointsSquare;
+        var nPointsCircle = pointsCounter.getNPointsCircle();
+        var nPointsSquare = pointsCounter.getNPointsSquare();
+
+        return 4 * Double.valueOf(nPointsCircle) / nPointsSquare;
     }
 }
