@@ -19,6 +19,7 @@ public class Main {
         System.out.println("THREADS " + nThreads);
         System.out.println("ITERATIONS " + nIterations);
         System.out.println("Time " + (endTime - startTime) + " ms");
+
     }
 
     public static int getString(String message) {
