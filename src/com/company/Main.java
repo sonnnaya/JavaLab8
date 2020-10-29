@@ -1,11 +1,12 @@
 package com.company;
 
-import java.util.concurrent.ExecutionException;
+import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) throws InterruptedException, ExecutionException {
-        var nThreads = 1000;
+    public static void main(String[] args) throws InterruptedException {
+//        var nThreads = getString("Enter number of threads: ");
+        var nThreads = 10;
         var nIterations = 100000000;
 
         var monteCarlo = new ParallelMonteCarloPi(nThreads, nIterations);
@@ -18,5 +19,11 @@ public class Main {
         System.out.println("THREADS " + nThreads);
         System.out.println("ITERATIONS " + nIterations);
         System.out.println("Time " + (endTime - startTime) + " ms");
+    }
+
+    public static int getString(String message) {
+        var in = new Scanner(System.in);
+        System.out.print(message + "\n");
+        return in.nextInt();
     }
 }

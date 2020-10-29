@@ -34,6 +34,7 @@ public class PointsCounterThread implements Runnable {
     @Override
     public void run() {
         var nPointsCircleTemp = calculatePointsCircle();
+
         nPointsCircle.addAndGet(nPointsCircleTemp);
         nPointsSquare.addAndGet(nThreadIteration);
     }
